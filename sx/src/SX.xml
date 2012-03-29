@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configs>
+	<sx-scan base-package="com.test.dao" />
+	<node-parser>
+		<parser name="if" class="net.javaoop.sx.parser.IfNodeParser" />
+		<parser name="else" class="net.javaoop.sx.parser.ElseNodeParser" />
+		<parser name="elseif" class="net.javaoop.sx.parser.ElseIfNodeParser" />
+	</node-parser>
+</configs>
