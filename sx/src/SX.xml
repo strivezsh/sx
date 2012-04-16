@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configs>
-	<sx-scan base-package="com.test.dao" />
+	<scan-package base-package="com.test.dao" >
+		<!-- 主要用于 多数据库类型 有两种方式 一种是 后缀名 另一种是 按文件夹区分 -->
+		<scheme type="file" name="mysql" value=".mysql" enable="true"/>
+		<scheme type="folder" name="oracle" value="oracle" enable="false"/>
+	</scan-package>
+	
 	<node-parser>
 		<parser name="if" class="net.javaoop.sx.parser.IfNodeParser" />
 		<parser name="else" class="net.javaoop.sx.parser.ElseNodeParser" />
