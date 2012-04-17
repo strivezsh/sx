@@ -1,6 +1,6 @@
 package net.javaoop.sx;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,14 +13,18 @@ import net.javaoop.sx.xml.XmlReader;
 public class SxBuilder {
 
 	public Sx build(String path) {
+		// 加载SX.xml配置文件
 		XmlReader reader = XmlReader.read(ClassLoader.getSystemResourceAsStream(path));
 		SxConfig sxConfig = new SxConfig();
+		// 解析SqlXml文件的扫描规则 以及路径
+		buildSqlXmlFile(sxConfig, reader);
+
+		// 解析节点转换器
 		buildSqlNodeParser(sxConfig, reader);
 
-		XNode sxScan_node = reader.evalNode("//configs/sx-scan");
-		buildSqlXmlFile(sxScan_node, sxConfig);
-
-		return null;
+		Sx sx = new Sx();
+		sx.setSxConfig(sxConfig);
+		return sx;
 	}
 
 	/**
@@ -30,7 +34,7 @@ public class SxBuilder {
 	 * @param sxConfig
 	 */
 	public void buildSqlNodeParser(SxConfig sxConfig, XmlReader reader) {
-		List<XNode> sql_parsers = reader.evalNodes("//configs/node-parser/parser");
+		List<XNode> sql_parsers = reader.evalNodes("//configs/parser/parser");
 		Map<String, SqlNodeParser> sqlNodeParsers = new HashMap<String, SqlNodeParser>();
 		for (XNode n : sql_parsers) {
 			String parserName = null;
@@ -50,9 +54,14 @@ public class SxBuilder {
 		sxConfig.setSqlNodeParser(sqlNodeParsers);
 	}
 
-	public void buildSqlXmlFile(XNode sxScan_node, SxConfig sxConfig) {
-		String basePackage = sxScan_node.getAttribute("base-package");
+	public void buildSqlXmlFile(SxConfig sxConfig, XmlReader reader) {
+		XNode scan = reader.evalNode("//configs/scan");
+		String basePackage = scan.getAttribute("base-package");
 		Assert.notBlank(basePackage, "SQL XML文件扫描包路径不能为空!!!");
+		String scheme = scan.getAttribute("scheme");
+		List<XNode> schemes = reader.evalNodes("//configs/scan/scheme");
+		
+		List<String> list = new ArrayList<String>();
 		if (basePackage.indexOf(',') != -1) {
 			String[] ss = basePackage.split(",");
 			for (String s : ss) {
@@ -61,6 +70,6 @@ public class SxBuilder {
 		} else {
 			sxConfig.getSxScan().add(basePackage);
 		}
-		String path = sxConfig.getSxScan().replace('.', '/');
+		// String path = sxConfig.getSxScan().replace('.', '/');
 	}
 }

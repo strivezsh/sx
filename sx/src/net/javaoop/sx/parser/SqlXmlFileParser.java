@@ -1,6 +1,7 @@
 package net.javaoop.sx.parser;
 
 import java.io.File;
+import java.util.Map;
 
 /**
  * sql文件解析器
@@ -16,5 +17,5 @@ public interface SqlXmlFileParser {
 	 * @param file
 	 *            SQL文件
 	 */
-	public void parse(File file);
+	public void parse(File file, Map<String, SqlNodeParser> sqlNodeParsers);
 }

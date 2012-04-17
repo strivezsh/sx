@@ -16,4 +16,8 @@ public class Sx {
 	public SxConfig getSxConfig() {
 		return sxConfig;
 	}
+
+	public void setSxConfig(SxConfig sxConfig) {
+		this.sxConfig = sxConfig;
+	}
 }

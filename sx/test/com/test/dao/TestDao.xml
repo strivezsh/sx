@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sqls>
+	<sql id="ceshi">
+		SELECT * FROM SALE
+			<if exp="${abc} == 1">
+				WHERE SALE_DATE LIKE ${sale_date}
+				<if exp="${abc} == 1">
+					where
+				</if>
+			<elseif exp="${abc} == 2" />
+				WHERE SALE_DATE LIKE ${sale_date}
+			<elseif exp="${abc} == 3" />
+				WHERE SALE_DATE LIKE ${sale_date}
+			<else/>
+				WHERE SALE_DATE LIKE ${sale_date}
+			</if>
+		ORDER BY SALE_DATE<占位符 id="" />
+		<替换占位符 id="abc">
+		
+		</替换占位符>
+	</sql>
+	<sql id="ceshi1">
+		SELECT * FROM SALE
+			<if exp="${abc} == 1">
+				WHERE SALE_DATE LIKE ${sale_date}
+			</if>
+		ORDER BY SALE_DATE
+	</sql>
+</sqls>

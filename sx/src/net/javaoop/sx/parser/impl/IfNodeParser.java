@@ -9,7 +9,7 @@ public class IfNodeParser extends SqlNodeParser {
 		content.append("<#if ");
 		content.append(node.getAttribute("exp"));
 		content.append(">");
-		content.append(parseSqlNode(node));
+		content.append(parseChildNode(sqlNodeParsers, node));
 		content.append("</#if>");
 	}
 

@@ -1,15 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configs>
-	<scan-package base-package="com.test.dao" scheme="mysql">
+	<!-- scheme属性 表示启用哪套方法 -->
+	<!-- 跟据base-package属性 进行扫描SqlXml文件 可以使用逗号进行分割 -->
+	<!-- 按照scheme标签配置的 规则 对 扫描的 文件进行分类 -->
+	<scan base-package="com.test.dao" scheme="mysql">
 		<!-- 主要用于 多数据库类型 有两种方式 一种是 后缀名 另一种是 按文件夹区分 -->
-		<scheme name="mysql" type="file" value=".mysql"/>
-		<scheme name="oracle" type="file" value="oracle"/>
-		<scheme name="oracle" type="folder" value="oracle"/>
-	</scan-package>
-	
-	<node-parser>
-		<parser name="if" class="net.javaoop.sx.parser.IfNodeParser" />
-		<parser name="else" class="net.javaoop.sx.parser.ElseNodeParser" />
-		<parser name="elseif" class="net.javaoop.sx.parser.ElseIfNodeParser" />
-	</node-parser>
+		<scheme name="mysql" type="file" value=".mysql" />
+		<scheme name="oracle" type="file" value="oracle" />
+		<scheme name="oracle" type="folder" value="oracle" />
+	</scan>
+
+	<!-- 最外层配置的是扫描整个xml文件的实现类 -->
+	<parser class="net.javaoop.sx.parser.impl.SqlXmlFileParserImpl">
+		<!-- 内层配置的是单个节点的实现类 -->
+		<parser name="if" class="net.javaoop.sx.parser.impl.IfNodeParser" />
+		<parser name="else" class="net.javaoop.sx.parser.impl.ElseNodeParser" />
+		<parser name="elseif" class="net.javaoop.sx.parser.impl.ElseIfNodeParser" />
+	</parser>
 </configs>
