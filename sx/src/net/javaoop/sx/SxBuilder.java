@@ -1,12 +1,15 @@
 package net.javaoop.sx;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 import net.javaoop.sx.parser.SqlNodeParser;
 import net.javaoop.sx.utils.Assert;
+import net.javaoop.sx.utils.StringUtils;
 import net.javaoop.sx.xml.XNode;
 import net.javaoop.sx.xml.XmlReader;
 
@@ -20,7 +23,7 @@ public class SxBuilder {
 		buildSqlXmlFile(sxConfig, reader);
 
 		// 解析节点转换器
-		buildSqlNodeParser(sxConfig, reader);
+		//buildSqlNodeParser(sxConfig, reader);
 
 		Sx sx = new Sx();
 		sx.setSxConfig(sxConfig);
@@ -56,20 +59,36 @@ public class SxBuilder {
 
 	public void buildSqlXmlFile(SxConfig sxConfig, XmlReader reader) {
 		XNode scan = reader.evalNode("//configs/scan");
+		sxConfig.setScheme(scan.getAttribute("scheme"));
+		List<String> basePackages = getBasePackage(scan);
+
+		for (Iterator<String> it = basePackages.iterator(); it.hasNext();) {
+			String basePackage = it.next().replace('.', '/');
+			System.out.println(basePackage);
+		}
+		List<XNode> schemes = reader.evalNodes("//configs/scan/scheme");
+		Map<String, List<File>> sqlXmlFiles = new HashMap<String, List<File>>();
+	}
+
+	/**
+	 * 解析 扫描路径
+	 * @param scan
+	 * @return
+	 */
+	public List<String> getBasePackage(XNode scan) {
 		String basePackage = scan.getAttribute("base-package");
 		Assert.notBlank(basePackage, "SQL XML文件扫描包路径不能为空!!!");
-		String scheme = scan.getAttribute("scheme");
-		List<XNode> schemes = reader.evalNodes("//configs/scan/scheme");
-		
 		List<String> list = new ArrayList<String>();
 		if (basePackage.indexOf(',') != -1) {
 			String[] ss = basePackage.split(",");
 			for (String s : ss) {
-				sxConfig.getSxScan().add(s);
+				if (StringUtils.isNotBlank(s)) {
+					list.add(s);
+				}
 			}
 		} else {
-			sxConfig.getSxScan().add(basePackage);
+			list.add(basePackage);
 		}
-		// String path = sxConfig.getSxScan().replace('.', '/');
+		return list;
 	}
 }

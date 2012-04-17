@@ -3,10 +3,12 @@
 	<!-- scheme属性 表示启用哪套方法 -->
 	<!-- 跟据base-package属性 进行扫描SqlXml文件 可以使用逗号进行分割 -->
 	<!-- 按照scheme标签配置的 规则 对 扫描的 文件进行分类 -->
-	<scan base-package="com.test.dao" scheme="mysql">
-		<!-- 主要用于 多数据库类型 有两种方式 一种是 后缀名 另一种是 按文件夹区分 -->
-		<scheme name="mysql" type="file" value=".mysql" />
+	<scan base-package="com.test.dao,com.test" scheme="mysql">
+		<!-- 系统内置default类型scheme 所有不复合 自定义规则 全部存放为default -->
+		<!-- 只要是base-package下文件后缀前含有mysql将会存放进对应scheme -->
+		<scheme name="mysql" type="file" value="mysql" />
 		<scheme name="oracle" type="file" value="oracle" />
+		<!-- 只要是base-package下文件夹名为oracle将会存放进对应scheme -->
 		<scheme name="oracle" type="folder" value="oracle" />
 	</scan>
 

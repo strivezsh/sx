@@ -9,5 +9,6 @@ public class Test {
 		SxBuilder builder = new SxBuilder();
 		Sx sx = builder.build("SX.xml");
 		// System.out.println(sx.getSql("ceshi"));
+	
 	}
 }

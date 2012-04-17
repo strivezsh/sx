@@ -28,6 +28,11 @@ public class SxConfig {
 	 */
 	private Map<String, SqlNodeParser> sqlNodeParser = new HashMap<String, SqlNodeParser>();
 
+	/**
+	 * 设置启用方案
+	 */
+	private String scheme;
+
 	public SqlCache getSqlCache() {
 		return sqlCache;
 	}
@@ -50,6 +55,14 @@ public class SxConfig {
 
 	public void setSqlNodeParser(Map<String, SqlNodeParser> sqlNodeParser) {
 		this.sqlNodeParser = sqlNodeParser;
+	}
+
+	public String getScheme() {
+		return scheme;
+	}
+
+	public void setScheme(String scheme) {
+		this.scheme = scheme;
 	}
 
 }
