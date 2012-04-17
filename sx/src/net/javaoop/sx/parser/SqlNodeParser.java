@@ -1,4 +1,4 @@
-package net.javaoop.sx.parser.impl;
+package net.javaoop.sx.parser;
 
 import java.util.Map;
 

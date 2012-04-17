@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configs>
-	<scan-package base-package="com.test.dao" >
+	<scan-package base-package="com.test.dao" scheme="mysql">
 		<!-- 主要用于 多数据库类型 有两种方式 一种是 后缀名 另一种是 按文件夹区分 -->
-		<scheme type="file" name="mysql" value=".mysql" enable="true"/>
-		<scheme type="folder" name="oracle" value="oracle" enable="false"/>
+		<scheme name="mysql" type="file" value=".mysql"/>
+		<scheme name="oracle" type="file" value="oracle"/>
+		<scheme name="oracle" type="folder" value="oracle"/>
 	</scan-package>
 	
 	<node-parser>

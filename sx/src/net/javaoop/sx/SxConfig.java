@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import net.javaoop.sx.cache.SqlCache;
-import net.javaoop.sx.parser.impl.SqlNodeParser;
+import net.javaoop.sx.parser.SqlNodeParser;
 
 public class SxConfig {
 	private SqlCache sqlCache;

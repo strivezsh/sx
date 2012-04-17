@@ -1,5 +1,6 @@
 package net.javaoop.sx.parser.impl;
 
+import net.javaoop.sx.parser.SqlNodeParser;
 import net.javaoop.sx.xml.XNode;
 
 public class IfNodeParser extends SqlNodeParser {

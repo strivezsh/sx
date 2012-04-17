@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import net.javaoop.sx.parser.impl.SqlNodeParser;
+import net.javaoop.sx.parser.SqlNodeParser;
 import net.javaoop.sx.utils.Assert;
 import net.javaoop.sx.xml.XNode;
 import net.javaoop.sx.xml.XmlReader;
