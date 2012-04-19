@@ -31,7 +31,7 @@ public class SxConfig {
 	/**
 	 * 设置启用方案
 	 */
-	private String scheme;
+	private String scheme = "default";
 
 	public SqlCache getSqlCache() {
 		return sqlCache;
