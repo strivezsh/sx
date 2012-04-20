@@ -20,7 +20,6 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
-@SuppressWarnings("unused")
 public class XmlReader {
 	private static final XmlReader reader = new XmlReader();
 	private Document document;

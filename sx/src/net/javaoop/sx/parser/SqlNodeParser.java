@@ -10,8 +10,8 @@ import org.w3c.dom.NodeList;
 
 public abstract class SqlNodeParser {
 
-	private SxConfig config;
-	private Map<String, SqlNodeParser> sqlNodeParsers = config.getSqlNodeParser();
+	private SxConfig sxConfig;
+	private Map<String, SqlNodeParser> sqlNodeParsers = sxConfig.getSqlNodeParsers();
 
 	/**
 	 * 解析sql标签内特定标签
@@ -49,19 +49,4 @@ public abstract class SqlNodeParser {
 		return contents.toString();
 	}
 
-	public SxConfig getConfig() {
-		return config;
-	}
-
-	public void setConfig(SxConfig config) {
-		this.config = config;
-	}
-
-	public Map<String, SqlNodeParser> getSqlNodeParsers() {
-		return sqlNodeParsers;
-	}
-
-	public void setSqlNodeParsers(Map<String, SqlNodeParser> sqlNodeParsers) {
-		this.sqlNodeParsers = sqlNodeParsers;
-	}
 }

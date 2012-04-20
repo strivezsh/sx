@@ -2,9 +2,14 @@ package test;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import net.javaoop.sx.Sx;
 import net.javaoop.sx.SxBuilder;
+import net.javaoop.sx.SxConfig;
 import net.javaoop.sx.utils.ResourceUtils;
 
 import org.apache.log4j.Logger;
@@ -13,8 +18,34 @@ public class Test {
 	private static final Logger log = Logger.getLogger(Test.class);
 
 	public static void main(String[] args) {
+		t();
+	}
+
+	public static void t() {
 		SxBuilder builder = new SxBuilder();
 		Sx sx = builder.build("SX.xml");
+		SxConfig config = sx.getSxConfig();
+		List<String> bp = config.getBasePackages();
+		System.out.println(bp);
+		Map<String, Map<String, File>> map = config.getSqlXmlFiles();
+		for (Iterator<Entry<String, Map<String, File>>> it = map.entrySet().iterator(); it.hasNext();) {
+			Entry<String, Map<String, File>> e = it.next();
+			System.out.println("============================================");
+			System.out.println("方案名:" + e.getKey());
+			for (Iterator<Entry<String, File>> it1 = e.getValue().entrySet().iterator(); it1.hasNext();) {
+				Entry<String, File> e1 = it1.next();
+				System.out.println("类名:" + e1.getKey());
+				System.out.println("对应文件:" + e1.getValue());
+			}
+		}
+	}
+
+	public static void testFileName() {
+		String fileName = "TestDaoSql.mysql.xml";
+		int fileNameSuffix = fileName.indexOf("Sql.");
+		fileName = fileName.substring(fileNameSuffix + 4);
+		fileName = fileName.substring(0, fileName.lastIndexOf('.'));
+		System.out.println(fileName);
 	}
 
 	public static void test() {
