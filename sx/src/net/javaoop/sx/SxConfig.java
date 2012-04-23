@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import net.javaoop.sx.cache.SqlCache;
-import net.javaoop.sx.parser.NodeParser;
+import net.javaoop.sx.parser.Parser;
 import net.javaoop.sx.scanner.Scanner;
 
 public class SxConfig {
@@ -19,10 +19,19 @@ public class SxConfig {
 	private SqlCache sqlCache;
 
 	/**
-	 * 设置启用方案
+	 * 设置启用查询方案
 	 */
 	private String scheme;
+
+	/**
+	 * 设置启用解析方案
+	 */
 	private String parser;
+
+	/**
+	 * 
+	 */
+	private Map<String, Parser> parsers;
 
 	private List<String> basePackages;
 	private Scanner scanner;
@@ -35,11 +44,6 @@ public class SxConfig {
 	 * </pre>
 	 */
 	private Map<String, Map<String, File>> sqlXmlFiles;
-
-	/**
-	 * 存放节点转换器 key为节点名
-	 */
-	private Map<String, Map<String, NodeParser>> sqlNodeParsers;
 
 	public SqlCache getSqlCache() {
 		return sqlCache;
@@ -65,6 +69,14 @@ public class SxConfig {
 		this.parser = parser;
 	}
 
+	public Map<String, Parser> getParsers() {
+		return parsers;
+	}
+
+	public void setParsers(Map<String, Parser> parsers) {
+		this.parsers = parsers;
+	}
+
 	public List<String> getBasePackages() {
 		return basePackages;
 	}
@@ -87,14 +99,6 @@ public class SxConfig {
 
 	public void setSqlXmlFiles(Map<String, Map<String, File>> sqlXmlFiles) {
 		this.sqlXmlFiles = sqlXmlFiles;
-	}
-
-	public Map<String, Map<String, NodeParser>> getSqlNodeParsers() {
-		return sqlNodeParsers;
-	}
-
-	public void setSqlNodeParsers(Map<String, Map<String, NodeParser>> sqlNodeParsers) {
-		this.sqlNodeParsers = sqlNodeParsers;
 	}
 
 }

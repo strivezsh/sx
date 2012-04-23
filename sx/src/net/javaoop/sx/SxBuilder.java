@@ -34,7 +34,7 @@ public class SxBuilder {
 		// 解析SqlXml文件的扫描规则 以及路径
 		resolveScannerNode();
 		// 解析节点转换器
-		// resolveParsersNode();
+		resolveParserNode();
 
 		Sx sx = new Sx();
 		sx.setSxConfig(sxConfig);
