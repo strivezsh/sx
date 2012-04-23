@@ -1,11 +1,15 @@
 package net.javaoop.sx;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import net.javaoop.sx.cache.SqlCache;
 import net.javaoop.sx.cache.impl.MemorySqlCache;
-import net.javaoop.sx.parser.SqlNodeParser;
+import net.javaoop.sx.parser.NodeParser;
+import net.javaoop.sx.parser.Parser;
+import net.javaoop.sx.parser.SqlXmlFileParser;
 import net.javaoop.sx.scanner.Scanner;
 import net.javaoop.sx.scanner.impl.ScannerImpl;
 import net.javaoop.sx.utils.AssertUtils;
@@ -26,6 +30,7 @@ public class SxBuilder {
 		sxConfig = new SxConfig();
 
 		resolveCacheNode();
+		resolveEnabled();
 		// 解析SqlXml文件的扫描规则 以及路径
 		resolveScannerNode();
 		// 解析节点转换器
@@ -56,6 +61,14 @@ public class SxBuilder {
 		sxConfig.setSqlCache(cache);
 	}
 
+	public void resolveEnabled() {
+		XNode node = reader.evalNode("//configs/enabled");
+		String scheme = node.getAttribute("scheme");
+		String parser = node.getAttribute("parser");
+		sxConfig.setScheme(StringUtils.isNotBlank(scheme) ? scheme : SxConfig.DEFAULT_SCHEME);
+		sxConfig.setParser(parser);
+	}
+
 	/**
 	 * 解析扫描节点
 	 * 
@@ -65,7 +78,6 @@ public class SxBuilder {
 	public void resolveScannerNode() {
 		XNode scannerNode = reader.evalNode("//configs/scanner");
 		resolveBasePackage(scannerNode);
-		resolveScheme(scannerNode);
 		String className = scannerNode.getAttribute("class");
 		Scanner scanner = null;
 		try {
@@ -96,7 +108,7 @@ public class SxBuilder {
 	public void resolveBasePackage(XNode scan) {
 		String basePackage = scan.getAttribute("base-package");
 		AssertUtils.notBlank(basePackage, "SQL XML文件扫描包路径不能为空!!!");
-		List<String> basePackages = sxConfig.getBasePackages();
+		List<String> basePackages = new ArrayList<String>();
 		if (basePackage.indexOf(',') != -1) {
 			String[] ss = basePackage.split(",");
 			for (String s : ss) {
@@ -107,11 +119,7 @@ public class SxBuilder {
 		} else {
 			basePackages.add(basePackage);
 		}
-	}
-
-	public void resolveScheme(XNode scan) {
-		String scheme = scan.getAttribute("scheme");
-		sxConfig.setScheme(StringUtils.isNotBlank(scheme) ? scheme : SxConfig.DEFAULT_SCHEME);
+		sxConfig.setBasePackages(basePackages);
 	}
 
 	/**
@@ -120,23 +128,39 @@ public class SxBuilder {
 	 * @param reader
 	 * @param sxConfig
 	 */
-	public void resolveParsersNode() {
-		List<XNode> sql_parsers = reader.evalNodes("//configs/parsers/parser");
-		Map<String, SqlNodeParser> sqlNodeParsers = sxConfig.getSqlNodeParsers();
-		for (XNode n : sql_parsers) {
-			String parserName = null;
-			String parserClass = null;
-			try {
-				parserName = n.getAttribute("name");
-				parserClass = n.getAttribute("class");
-				sqlNodeParsers.put(parserName, (SqlNodeParser) Class.forName(parserClass).newInstance());
-			} catch (InstantiationException e) {
-				log.debug("解析类" + parserClass + "创建失败!!!", e);
-			} catch (IllegalAccessException e) {
-				log.debug("解析类" + parserClass + "创建失败!!!", e);
-			} catch (ClassNotFoundException e) {
-				log.debug("解析类" + parserClass + "找不到!!!", e);
+	public void resolveParserNode() {
+		List<XNode> node_parsers = reader.evalNodes("//configs/parser");
+		Map<String, Parser> parsers = new HashMap<String, Parser>();
+		try {
+			for (XNode node : node_parsers) {
+				String load = node.getAttribute("load");
+				if (StringUtils.isBlank(load) || "true".equalsIgnoreCase(load)) {
+					String parserName = node.getAttribute("name");
+					String className = node.getAttribute("class");
+					Parser parser = new Parser();
+					parser.setName(parserName);
+					parser.setSqlXmlFileParser((SqlXmlFileParser) Class.forName(className).newInstance());
+					List<XNode> childs = node.getChildNodes();
+					Map<String, NodeParser> nodeParsers = new HashMap<String, NodeParser>();
+					for (XNode child : childs) {
+						String nodeName = child.getAttribute("name");
+						String nodeClass = child.getAttribute("class");
+						if (!"sql".equalsIgnoreCase(nodeName)) {
+							nodeParsers.put(nodeName, (NodeParser) Class.forName(nodeClass).newInstance());
+						} else {
+							parser.setSqlNodeParser((NodeParser) Class.forName(nodeClass).newInstance());
+						}
+					}
+					parser.setNodeParsers(nodeParsers);
+					parsers.put(parserName, parser);
+				}
 			}
+		} catch (InstantiationException e) {
+			// log.debug("解析类" + parserClass + "创建失败!!!", e);
+		} catch (IllegalAccessException e) {
+			// log.debug("解析类" + parserClass + "创建失败!!!", e);
+		} catch (ClassNotFoundException e) {
+			// log.debug("解析类" + parserClass + "找不到!!!", e);
 		}
 	}
 

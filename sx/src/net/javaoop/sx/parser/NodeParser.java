@@ -8,10 +8,7 @@ import net.javaoop.sx.xml.XNode;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-public abstract class SqlNodeParser {
-
-	private SxConfig sxConfig;
-	private Map<String, SqlNodeParser> sqlNodeParsers = sxConfig.getSqlNodeParsers();
+public abstract class NodeParser {
 
 	/**
 	 * 解析sql标签内特定标签
@@ -21,7 +18,7 @@ public abstract class SqlNodeParser {
 	 * @param context
 	 *            解析结果
 	 */
-	protected abstract void parseNode(XNode node, StringBuilder context);
+	public abstract void parseNode(XNode node, StringBuilder context);
 
 	/**
 	 * 把sql标签的 内容 转换为脚本语言
@@ -39,7 +36,7 @@ public abstract class SqlNodeParser {
 				contents.append(child.getText());
 			} else {
 				String nodeName = child.getNode().getNodeName();
-				SqlNodeParser parser = sqlNodeParsers.get(nodeName);
+				NodeParser parser = sqlNodeParsers.get(nodeName);
 				if (parser == null) {
 					throw new RuntimeException("不能解析此类型节点 <" + nodeName + "> !!!");
 				}

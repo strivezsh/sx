@@ -1,5 +1,7 @@
 package net.javaoop.sx.xml;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -14,6 +16,7 @@ import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathFactory;
 
+import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -21,7 +24,7 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 public class XmlReader {
-	private static final XmlReader reader = new XmlReader();
+	private static final Logger log = Logger.getLogger(XmlReader.class);
 	private Document document;
 	private XPath xpath;
 	{
@@ -33,24 +36,42 @@ public class XmlReader {
 	}
 
 	public static XmlReader read(InputStream inputStream) {
+		XmlReader reader = null;
 		try {
-			return read(new InputSource(inputStream));
+			reader = read(new InputSource(inputStream));
 		} catch (Exception e) {
-			throw new RuntimeException("创建XmlReader失败!", e);
+			log.debug("创建XmlReader失败!");
+			e.printStackTrace();
 		}
+		return reader;
+	}
+
+	public static XmlReader read(File file) {
+		XmlReader reader = null;
+		try {
+			reader = read(new FileReader(file));
+		} catch (FileNotFoundException e) {
+			log.debug("创建XmlReader失败," + (file == null ? "文件对象为空!" : "未找到XML文件:" + file.getPath()));
+			e.printStackTrace();
+		}
+		return reader;
 	}
 
 	public static XmlReader read(FileReader fileReader) {
+		XmlReader reader = null;
 		try {
-			return read(new InputSource(fileReader));
+			reader = read(new InputSource(fileReader));
 		} catch (Exception e) {
-			throw new RuntimeException("创建XmlReader失败!", e);
+			log.debug("创建XmlReader失败!");
+			e.printStackTrace();
 		}
+		return reader;
 	}
 
 	public static XmlReader read(InputSource inputSource) throws ParserConfigurationException, SAXException, IOException {
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder builder = factory.newDocumentBuilder();
+		XmlReader reader = new XmlReader();
 		reader.document = builder.parse(inputSource);
 		return reader;
 	}
@@ -119,5 +140,4 @@ public class XmlReader {
 		}
 		return xnodes;
 	}
-
 }

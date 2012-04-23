@@ -1,6 +1,8 @@
 package net.javaoop.sx.xml;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.w3c.dom.CharacterData;
@@ -60,6 +62,15 @@ public class XNode {
 		this.attributes = attributes;
 	}
 
+	public List<XNode> getChildNodes() {
+		NodeList nodeList = getNode().getChildNodes();
+		List<XNode> list = new ArrayList<XNode>();
+		for (int i = 0; i < nodeList.getLength(); i++) {
+			list.add(new XNode(nodeList.item(i)));
+		}
+		return list;
+	}
+
 	private Map<String, String> parseAttributes(Node node) {
 		Map<String, String> attrs = new HashMap<String, String>();
 		NamedNodeMap attrMap = node.getAttributes();
@@ -100,4 +111,5 @@ public class XNode {
 		}
 		return null;
 	}
+
 }

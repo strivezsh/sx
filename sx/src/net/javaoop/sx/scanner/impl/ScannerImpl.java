@@ -34,8 +34,8 @@ public class ScannerImpl extends Scanner {
 	private static final String FILE_SUFFIX = ".xml";
 
 	public void scan() {
-		List<String> basePackages = sxConfig.getBasePackages();
-		Map<String, Map<String, File>> sqlXmlFiles = sxConfig.getSqlXmlFiles();
+		List<String> basePackages = getSxConfig().getBasePackages();
+		Map<String, Map<String, File>> sqlXmlFiles = new HashMap<String, Map<String, File>>();
 		for (Iterator<String> it = basePackages.iterator(); it.hasNext();) {
 			String basePackage = it.next();
 			try {
@@ -45,6 +45,7 @@ public class ScannerImpl extends Scanner {
 				log.debug("根据包名:" + basePackage + ",未找到对应目录绝对路径!!!", e);
 			}
 		}
+		getSxConfig().setSqlXmlFiles(sqlXmlFiles);
 	}
 
 	public void doScan(String basePackage, File directory, Map<String, Map<String, File>> sqlXmlFiles) {
