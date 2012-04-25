@@ -6,6 +6,8 @@ public interface SqlCache {
 	public void put(String scheme, String key, String value);
 
 	public String get(String scheme, String key);
+	
+	public Object getAll();
 
 	public void clear();
 

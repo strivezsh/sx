@@ -10,6 +10,7 @@ import java.util.Map.Entry;
 import net.javaoop.sx.Sx;
 import net.javaoop.sx.SxBuilder;
 import net.javaoop.sx.SxConfig;
+import net.javaoop.sx.cache.SqlCache;
 import net.javaoop.sx.utils.ResourceUtils;
 
 import org.apache.log4j.Logger;
@@ -36,6 +37,17 @@ public class Test {
 				Entry<String, File> e1 = it1.next();
 				System.out.println("类名:" + e1.getKey());
 				System.out.println("对应文件:" + e1.getValue());
+			}
+		}
+		SqlCache cache = config.getSqlCache();
+		Map<String, Map<String, String>> c = (Map<String, Map<String, String>>) cache.getAll();
+		for (Iterator<String> it1 = c.keySet().iterator(); it1.hasNext();) {
+			String key1 = it1.next();
+			for (Iterator<String> it2 = c.get(key1).keySet().iterator(); it2.hasNext();) {
+				String key2 = it2.next();
+				System.out.println("方案:" + key1);
+				System.out.println("key:" + key2);
+				System.out.println("value:" + c.get(key1).get(key2));
 			}
 		}
 	}

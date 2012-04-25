@@ -11,7 +11,7 @@
 	<scanner base-package="com.test.dao,com.test" class="net.javaoop.sx.scanner.impl.ScannerImpl" />
 
 	<!-- 最外层配置的是扫描整个xml文件的实现类 -->
-	<parser name="freemarker" class="net.javaoop.sx.parser.impl.SqlXmlFileParserImpl">
+	<parser name="freemarker" class="net.javaoop.sx.parser.impl.ParserImpl" resolve="true">
 		<!-- 内层配置的是单个节点的实现类 -->
 		<node name="if" class="net.javaoop.sx.parser.impl.IfNodeParser" />
 		<node name="else" class="net.javaoop.sx.parser.impl.ElseNodeParser" />
@@ -19,7 +19,7 @@
 	</parser>
 
 	<!-- 最外层配置的是扫描整个xml文件的实现类 -->
-	<parser name="velocity" class="net.javaoop.sx.parser.impl.SqlXmlFileParserImpl">
+	<parser name="velocity" class="net.javaoop.sx.parser.impl.ParserImpl" resolve="true">
 		<!-- 内层配置的是单个节点的实现类 -->
 		<node name="sql" class="net.javaoop.sx.parser.impl.IfNodeParser" />
 		<node name="if" class="net.javaoop.sx.parser.impl.IfNodeParser" />

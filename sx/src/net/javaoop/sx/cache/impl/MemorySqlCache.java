@@ -37,4 +37,8 @@ public class MemorySqlCache implements SqlCache {
 
 	public void clear() {
 	}
+
+	public Object getAll() {
+		return cache;
+	}
 }

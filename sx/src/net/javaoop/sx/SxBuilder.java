@@ -4,12 +4,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import net.javaoop.sx.cache.SqlCache;
 import net.javaoop.sx.cache.impl.MemorySqlCache;
 import net.javaoop.sx.parser.NodeParser;
 import net.javaoop.sx.parser.Parser;
-import net.javaoop.sx.parser.SqlXmlFileParser;
 import net.javaoop.sx.scanner.Scanner;
 import net.javaoop.sx.scanner.impl.ScannerImpl;
 import net.javaoop.sx.utils.AssertUtils;
@@ -35,6 +35,7 @@ public class SxBuilder {
 		resolveScannerNode();
 		// 解析节点转换器
 		resolveParserNode();
+		resolveParser();
 
 		Sx sx = new Sx();
 		sx.setSxConfig(sxConfig);
@@ -133,23 +134,18 @@ public class SxBuilder {
 		Map<String, Parser> parsers = new HashMap<String, Parser>();
 		try {
 			for (XNode node : node_parsers) {
-				String load = node.getAttribute("load");
-				if (StringUtils.isBlank(load) || "true".equalsIgnoreCase(load)) {
+				String resolve = node.getAttribute("resolve");
+				if (StringUtils.isBlank(resolve) || "true".equalsIgnoreCase(resolve)) {
 					String parserName = node.getAttribute("name");
 					String className = node.getAttribute("class");
-					Parser parser = new Parser();
+					Parser parser = (Parser) Class.forName(className).newInstance();
 					parser.setName(parserName);
-					parser.setSqlXmlFileParser((SqlXmlFileParser) Class.forName(className).newInstance());
-					List<XNode> childs = node.getChildNodes();
+					List<XNode> childs = node.getChildNodes("node");
 					Map<String, NodeParser> nodeParsers = new HashMap<String, NodeParser>();
 					for (XNode child : childs) {
 						String nodeName = child.getAttribute("name");
 						String nodeClass = child.getAttribute("class");
-						if (!"sql".equalsIgnoreCase(nodeName)) {
-							nodeParsers.put(nodeName, (NodeParser) Class.forName(nodeClass).newInstance());
-						} else {
-							parser.setSqlNodeParser((NodeParser) Class.forName(nodeClass).newInstance());
-						}
+						nodeParsers.put(nodeName, (NodeParser) Class.forName(nodeClass).newInstance());
 					}
 					parser.setNodeParsers(nodeParsers);
 					parsers.put(parserName, parser);
@@ -161,6 +157,13 @@ public class SxBuilder {
 			// log.debug("解析类" + parserClass + "创建失败!!!", e);
 		} catch (ClassNotFoundException e) {
 			// log.debug("解析类" + parserClass + "找不到!!!", e);
+		}
+	}
+
+	public void resolveParser() {
+		Map<String, Parser> parsers = sxConfig.getParsers();
+		for (Entry<String, Parser> entry : parsers.entrySet()) {
+			entry.getValue().parser();
 		}
 	}
 

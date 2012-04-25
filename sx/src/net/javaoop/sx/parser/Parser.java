@@ -1,24 +1,33 @@
 package net.javaoop.sx.parser;
 
+import java.io.File;
 import java.util.Map;
+import java.util.Map.Entry;
 
-public class Parser {
+import net.javaoop.sx.SxConfig;
+import net.javaoop.sx.cache.SqlCache;
+
+public abstract class Parser {
 	private String name;
-	private SqlXmlFileParser sqlXmlFileParser;
-	private NodeParser sqlNodeParser;
 	private Map<String, NodeParser> nodeParsers;
+	private SxConfig sxConfig;
 
-	public Parser() {
-		super();
+	public void parser() {
+		SqlCache cache = getSxConfig().getSqlCache();
+		Map<String, Map<String, File>> sqlXmlFiles = getSxConfig().getSqlXmlFiles();
+		for (Entry<String, Map<String, File>> entry1 : sqlXmlFiles.entrySet()) {
+			Map<String, File> classNameWidthSqlXmlFile = entry1.getValue();
+			for (Entry<String, File> entry2 : classNameWidthSqlXmlFile.entrySet()) {
+				String className = entry2.getKey();
+				File xmlFile = entry2.getValue();
+				if (xmlFile != null && xmlFile.exists()) {
+					parseXmlFile(entry1.getKey(), className, xmlFile, cache);
+				}
+			}
+		}
 	}
 
-	public Parser(String name, SqlXmlFileParser sqlXmlFileParser, NodeParser sqlNodeParser, Map<String, NodeParser> nodeParsers) {
-		super();
-		this.name = name;
-		this.sqlXmlFileParser = sqlXmlFileParser;
-		this.sqlNodeParser = sqlNodeParser;
-		this.nodeParsers = nodeParsers;
-	}
+	protected abstract void parseXmlFile(String scheme, String className, File file, SqlCache cache);
 
 	public String getName() {
 		return name;
@@ -28,27 +37,19 @@ public class Parser {
 		this.name = name;
 	}
 
-	public SqlXmlFileParser getSqlXmlFileParser() {
-		return sqlXmlFileParser;
-	}
-
-	public void setSqlXmlFileParser(SqlXmlFileParser sqlXmlFileParser) {
-		this.sqlXmlFileParser = sqlXmlFileParser;
-	}
-
-	public NodeParser getSqlNodeParser() {
-		return sqlNodeParser;
-	}
-
-	public void setSqlNodeParser(NodeParser sqlNodeParser) {
-		this.sqlNodeParser = sqlNodeParser;
-	}
-
 	public Map<String, NodeParser> getNodeParsers() {
 		return nodeParsers;
 	}
 
 	public void setNodeParsers(Map<String, NodeParser> nodeParsers) {
 		this.nodeParsers = nodeParsers;
+	}
+
+	public SxConfig getSxConfig() {
+		return sxConfig;
+	}
+
+	public void setSxConfig(SxConfig sxConfig) {
+		this.sxConfig = sxConfig;
 	}
 }

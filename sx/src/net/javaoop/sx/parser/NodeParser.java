@@ -26,12 +26,13 @@ public abstract class NodeParser {
 	 *            sql节点
 	 * @return 转换后的脚本语言
 	 */
-	public String parseChildNode(XNode node, Map<String, NodeParser> nodeParsers) {
+	protected String parseChildNode(XNode node, Map<String, NodeParser> nodeParsers) {
 		StringBuilder contents = new StringBuilder();
 		NodeList childs = node.getNode().getChildNodes();
 		for (int i = 0; i < childs.getLength(); i++) {
 			XNode child = new XNode(childs.item(i));
-			if (child.getNode().getNodeType() == Node.CDATA_SECTION_NODE || child.getNode().getNodeType() == Node.TEXT_NODE) {
+			short nodeType = child.getNode().getNodeType();
+			if (nodeType == Node.CDATA_SECTION_NODE || nodeType == Node.TEXT_NODE) {
 				contents.append(child.getText());
 			} else {
 				String nodeName = child.getNode().getNodeName();

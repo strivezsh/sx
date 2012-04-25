@@ -62,11 +62,52 @@ public class XNode {
 		this.attributes = attributes;
 	}
 
-	public List<XNode> getChildNodes() {
+	/**
+	 * 获取所有标签
+	 * 
+	 * @return
+	 */
+	public List<XNode> getAllChildNodes() {
 		NodeList nodeList = getNode().getChildNodes();
 		List<XNode> list = new ArrayList<XNode>();
 		for (int i = 0; i < nodeList.getLength(); i++) {
 			list.add(new XNode(nodeList.item(i)));
+		}
+		return list;
+	}
+
+	/**
+	 * 不包含text标签 注释标签
+	 * 
+	 * @return
+	 */
+	public List<XNode> getChildNodes() {
+		NodeList nodeList = getNode().getChildNodes();
+		List<XNode> list = new ArrayList<XNode>();
+		for (int i = 0; i < nodeList.getLength(); i++) {
+			Node node = nodeList.item(i);
+			if (node.getNodeType() != Node.TEXT_NODE && node.getNodeType() != Node.CDATA_SECTION_NODE
+					&& node.getNodeType() != Node.COMMENT_NODE) {
+				list.add(new XNode(node));
+			}
+		}
+		return list;
+	}
+
+	/**
+	 * 获取当前标签下 所有标签名为nodeName的标签
+	 * 
+	 * @param nodeName
+	 * @return
+	 */
+	public List<XNode> getChildNodes(String nodeName) {
+		NodeList nodeList = getNode().getChildNodes();
+		List<XNode> list = new ArrayList<XNode>();
+		for (int i = 0; i < nodeList.getLength(); i++) {
+			Node node = nodeList.item(i);
+			if (nodeName.equalsIgnoreCase(node.getNodeName())) {
+				list.add(new XNode(node));
+			}
 		}
 		return list;
 	}
