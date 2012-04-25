@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import net.javaoop.sx.cache.SqlCache;
 import net.javaoop.sx.cache.impl.MemorySqlCache;
@@ -31,11 +30,11 @@ public class SxBuilder {
 
 		resolveCacheNode();
 		resolveEnabled();
-		// 解析SqlXml文件的扫描规则 以及路径
-		resolveScannerNode();
 		// 解析节点转换器
 		resolveParserNode();
-		resolveParser();
+
+		// 解析SqlXml文件的扫描规则 以及路径
+		resolveScannerNode();
 
 		Sx sx = new Sx();
 		sx.setSxConfig(sxConfig);
@@ -68,6 +67,43 @@ public class SxBuilder {
 		String parser = node.getAttribute("parser");
 		sxConfig.setScheme(StringUtils.isNotBlank(scheme) ? scheme : SxConfig.DEFAULT_SCHEME);
 		sxConfig.setParser(parser);
+	}
+
+	/**
+	 * 解析节点解析器
+	 * 
+	 * @param reader
+	 * @param sxConfig
+	 */
+	public void resolveParserNode() {
+		List<XNode> node_parsers = reader.evalNodes("//configs/parser");
+		Map<String, Parser> parsers = new HashMap<String, Parser>();
+		try {
+			for (XNode node : node_parsers) {
+				String resolve = node.getAttribute("resolve");
+				if (StringUtils.isBlank(resolve) || "true".equalsIgnoreCase(resolve)) {
+					String parserName = node.getAttribute("name");
+					String className = node.getAttribute("class");
+					Parser parser = (Parser) Class.forName(className).newInstance();
+					parser.setName(parserName);
+					List<XNode> childs = node.getChildNodes("node");
+					Map<String, NodeParser> nodeParsers = new HashMap<String, NodeParser>();
+					for (XNode child : childs) {
+						String nodeName = child.getAttribute("name");
+						String nodeClass = child.getAttribute("class");
+						nodeParsers.put(nodeName, (NodeParser) Class.forName(nodeClass).newInstance());
+					}
+					parser.setNodeParsers(nodeParsers);
+					parsers.put(parserName, parser);
+				}
+			}
+		} catch (InstantiationException e) {
+			// log.debug("解析类" + parserClass + "创建失败!!!", e);
+		} catch (IllegalAccessException e) {
+			// log.debug("解析类" + parserClass + "创建失败!!!", e);
+		} catch (ClassNotFoundException e) {
+			// log.debug("解析类" + parserClass + "找不到!!!", e);
+		}
 	}
 
 	/**
@@ -121,50 +157,6 @@ public class SxBuilder {
 			basePackages.add(basePackage);
 		}
 		sxConfig.setBasePackages(basePackages);
-	}
-
-	/**
-	 * 解析节点解析器
-	 * 
-	 * @param reader
-	 * @param sxConfig
-	 */
-	public void resolveParserNode() {
-		List<XNode> node_parsers = reader.evalNodes("//configs/parser");
-		Map<String, Parser> parsers = new HashMap<String, Parser>();
-		try {
-			for (XNode node : node_parsers) {
-				String resolve = node.getAttribute("resolve");
-				if (StringUtils.isBlank(resolve) || "true".equalsIgnoreCase(resolve)) {
-					String parserName = node.getAttribute("name");
-					String className = node.getAttribute("class");
-					Parser parser = (Parser) Class.forName(className).newInstance();
-					parser.setName(parserName);
-					List<XNode> childs = node.getChildNodes("node");
-					Map<String, NodeParser> nodeParsers = new HashMap<String, NodeParser>();
-					for (XNode child : childs) {
-						String nodeName = child.getAttribute("name");
-						String nodeClass = child.getAttribute("class");
-						nodeParsers.put(nodeName, (NodeParser) Class.forName(nodeClass).newInstance());
-					}
-					parser.setNodeParsers(nodeParsers);
-					parsers.put(parserName, parser);
-				}
-			}
-		} catch (InstantiationException e) {
-			// log.debug("解析类" + parserClass + "创建失败!!!", e);
-		} catch (IllegalAccessException e) {
-			// log.debug("解析类" + parserClass + "创建失败!!!", e);
-		} catch (ClassNotFoundException e) {
-			// log.debug("解析类" + parserClass + "找不到!!!", e);
-		}
-	}
-
-	public void resolveParser() {
-		Map<String, Parser> parsers = sxConfig.getParsers();
-		for (Entry<String, Parser> entry : parsers.entrySet()) {
-			entry.getValue().parser();
-		}
 	}
 
 }
