@@ -94,15 +94,17 @@ public class SxBuilder {
 						nodeParsers.put(nodeName, (NodeParser) Class.forName(nodeClass).newInstance());
 					}
 					parser.setNodeParsers(nodeParsers);
+					parser.setSqlCache(sxConfig.getSqlCache());
 					parsers.put(parserName, parser);
 				}
 			}
+			sxConfig.setParsers(parsers);
 		} catch (InstantiationException e) {
-			// log.debug("解析类" + parserClass + "创建失败!!!", e);
+			e.printStackTrace();
 		} catch (IllegalAccessException e) {
-			// log.debug("解析类" + parserClass + "创建失败!!!", e);
+			e.printStackTrace();
 		} catch (ClassNotFoundException e) {
-			// log.debug("解析类" + parserClass + "找不到!!!", e);
+			e.printStackTrace();
 		}
 	}
 
@@ -123,17 +125,18 @@ public class SxBuilder {
 			} else {
 				scanner = (Scanner) Class.forName(className).newInstance();
 			}
-			scanner.setSxConfig(sxConfig);
 			sxConfig.setScanner(scanner);
+			sxConfig.setSqlXmlFiles(scanner.scan(sxConfig.getBasePackages(), sxConfig.getParsers()));
 		} catch (InstantiationException e) {
+			log.debug("扫描器:" + className + "类创建失败!!!");
 			e.printStackTrace();
-			log.debug("扫描器:" + className + "类创建失败!!!", e);
 		} catch (IllegalAccessException e) {
-			log.debug("扫描器:" + className + "类创建失败!!!", e);
+			log.debug("扫描器:" + className + "类创建失败!!!");
+			e.printStackTrace();
 		} catch (ClassNotFoundException e) {
-			log.debug("未找到扫描器:" + className + "类!!!", e);
+			log.debug("未找到扫描器:" + className + "类!!!");
+			e.printStackTrace();
 		}
-		scanner.scan();
 	}
 
 	/**

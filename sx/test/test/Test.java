@@ -11,6 +11,8 @@ import net.javaoop.sx.Sx;
 import net.javaoop.sx.SxBuilder;
 import net.javaoop.sx.SxConfig;
 import net.javaoop.sx.cache.SqlCache;
+import net.javaoop.sx.parser.NodeParser;
+import net.javaoop.sx.parser.Parser;
 import net.javaoop.sx.utils.ResourceUtils;
 
 import org.apache.log4j.Logger;
@@ -39,6 +41,17 @@ public class Test {
 				System.out.println("对应文件:" + e1.getValue());
 			}
 		}
+		Map<String, Parser> parsers = config.getParsers();
+		for (Entry<String, Parser> ep : parsers.entrySet()) {
+			Parser parser = ep.getValue();
+			System.out.println("============================================");
+			System.out.println("解析方案:" + parser.getName());
+			Map<String, NodeParser> nps = parser.getNodeParsers();
+			for (Entry<String, NodeParser> enp : nps.entrySet()) {
+				System.out.println("标签解析器:" + enp.getKey());
+			}
+		}
+
 		SqlCache cache = config.getSqlCache();
 		Map<String, Map<String, String>> c = (Map<String, Map<String, String>>) cache.getAll();
 		for (Iterator<String> it1 = c.keySet().iterator(); it1.hasNext();) {

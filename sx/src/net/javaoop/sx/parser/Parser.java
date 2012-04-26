@@ -3,15 +3,14 @@ package net.javaoop.sx.parser;
 import java.io.File;
 import java.util.Map;
 
-import net.javaoop.sx.SxConfig;
 import net.javaoop.sx.cache.SqlCache;
 
 public abstract class Parser {
 	private String name;
 	private Map<String, NodeParser> nodeParsers;
-	private SxConfig sxConfig;
+	private SqlCache sqlCache;
 
-	protected abstract void parseXmlFile(String scheme, String className, File file, SqlCache cache);
+	public abstract void parseXmlFile(String scheme, String className, File file);
 
 	public String getName() {
 		return name;
@@ -29,11 +28,11 @@ public abstract class Parser {
 		this.nodeParsers = nodeParsers;
 	}
 
-	public SxConfig getSxConfig() {
-		return sxConfig;
+	public SqlCache getSqlCache() {
+		return sqlCache;
 	}
 
-	public void setSxConfig(SxConfig sxConfig) {
-		this.sxConfig = sxConfig;
+	public void setSqlCache(SqlCache sqlCache) {
+		this.sqlCache = sqlCache;
 	}
 }

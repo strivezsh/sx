@@ -1,17 +1,11 @@
 package net.javaoop.sx.scanner;
 
-import net.javaoop.sx.SxConfig;
+import java.io.File;
+import java.util.List;
+import java.util.Map;
 
-public abstract class Scanner {
-	protected SxConfig sxConfig;
+import net.javaoop.sx.parser.Parser;
 
-	public abstract void scan();
-
-	public void setSxConfig(SxConfig sxConfig) {
-		this.sxConfig = sxConfig;
-	}
-
-	public SxConfig getSxConfig() {
-		return sxConfig;
-	}
+public interface Scanner {
+	Map<String, Map<String, File>> scan(List<String> basePackages, Map<String, Parser> parsers);
 }

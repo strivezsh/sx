@@ -37,10 +37,10 @@ public abstract class NodeParser {
 			} else {
 				String nodeName = child.getNode().getNodeName();
 				NodeParser parser = nodeParsers.get(nodeName);
-				if (parser == null) {
-					throw new RuntimeException("不能解析此类型节点 <" + nodeName + "> !!!");
+				if (parser != null) {
+//					throw new RuntimeException("不能解析此类型节点 <" + nodeName + "> !!!");
+					parser.parseNode(child, contents, nodeParsers);
 				}
-				parser.parseNode(child, contents, nodeParsers);
 			}
 		}
 		return contents.toString();

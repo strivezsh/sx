@@ -17,6 +17,7 @@ public class MemorySqlCache implements SqlCache {
 		Map<String, String> map = cache.get(scheme);
 		if (map == null) {
 			map = new HashMap<String, String>();
+			cache.put(scheme, map);
 		}
 		map.put(key, value);
 	}
