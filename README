@@ -1,0 +1,1 @@
+此工具是mybatis的一个功能子集,以xml形式配置sql语句,然后解析成脚本语言(freemaker,velocity)进行管理.
