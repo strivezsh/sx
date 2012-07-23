@@ -2,9 +2,9 @@
 <configs>
 	<cache class="net.javaoop.sx.cache.impl.MemorySqlCache" />
 
+	<!-- scheme属性 表示启用哪套方法 -->
 	<enabled scheme="mysql" parser="freemarker" />
 
-	<!-- scheme属性 表示启用哪套方法 -->
 	<!-- 跟据base-package属性 进行扫描SqlXml文件 可以使用逗号进行分割 -->
 	<!-- 此处 配置的 时候 千万不要配置 有大于其他包的类包 例如:com,com.test 这样 将会 扫描两边com.test -->
 	<!-- 方案 按照 文件名进行分类 例如 TestDaoSql.mysql.xml 属于 mysql方案 -->

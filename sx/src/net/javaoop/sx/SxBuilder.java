@@ -24,11 +24,14 @@ public class SxBuilder {
 	private XmlReader reader;
 
 	public Sx build(String path) {
-		// 加载SX.xml配置文件
-		reader = XmlReader.read(ClassLoader.getSystemResourceAsStream(path));
+		// 初始化 配置类
 		sxConfig = new SxConfig();
 
+		// 加载SX.xml配置文件
+		reader = XmlReader.read(ClassLoader.getSystemResourceAsStream(path));
+		// 解析缓存节点
 		resolveCacheNode();
+		// 解析
 		resolveEnabled();
 		// 解析节点转换器
 		resolveParserNode();
@@ -65,7 +68,8 @@ public class SxBuilder {
 		XNode node = reader.evalNode("//configs/enabled");
 		String scheme = node.getAttribute("scheme");
 		String parser = node.getAttribute("parser");
-		sxConfig.setScheme(StringUtils.isNotBlank(scheme) ? scheme : SxConfig.DEFAULT_SCHEME);
+		sxConfig.setScheme(StringUtils.isNotBlank(scheme) ? scheme
+				: SxConfig.DEFAULT_SCHEME);
 		sxConfig.setParser(parser);
 	}
 
@@ -81,17 +85,21 @@ public class SxBuilder {
 		try {
 			for (XNode node : node_parsers) {
 				String resolve = node.getAttribute("resolve");
-				if (StringUtils.isBlank(resolve) || "true".equalsIgnoreCase(resolve)) {
+				if (StringUtils.isBlank(resolve)
+						|| "true".equalsIgnoreCase(resolve)) {
 					String parserName = node.getAttribute("name");
 					String className = node.getAttribute("class");
-					Parser parser = (Parser) Class.forName(className).newInstance();
+					Parser parser = (Parser) Class.forName(className)
+							.newInstance();
 					parser.setName(parserName);
 					List<XNode> childs = node.getChildNodes("node");
 					Map<String, NodeParser> nodeParsers = new HashMap<String, NodeParser>();
 					for (XNode child : childs) {
 						String nodeName = child.getAttribute("name");
 						String nodeClass = child.getAttribute("class");
-						nodeParsers.put(nodeName, (NodeParser) Class.forName(nodeClass).newInstance());
+						nodeParsers.put(nodeName,
+								(NodeParser) Class.forName(nodeClass)
+										.newInstance());
 					}
 					parser.setNodeParsers(nodeParsers);
 					parser.setSqlCache(sxConfig.getSqlCache());
@@ -126,7 +134,8 @@ public class SxBuilder {
 				scanner = (Scanner) Class.forName(className).newInstance();
 			}
 			sxConfig.setScanner(scanner);
-			sxConfig.setSqlXmlFiles(scanner.scan(sxConfig.getBasePackages(), sxConfig.getParsers()));
+			sxConfig.setSqlXmlFiles(scanner.scan(sxConfig.getBasePackages(),
+					sxConfig.getParsers()));
 		} catch (InstantiationException e) {
 			log.debug("扫描器:" + className + "类创建失败!!!");
 			e.printStackTrace();
