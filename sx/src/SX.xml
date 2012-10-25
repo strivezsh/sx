@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configs>
+	<scan scheme="mysql" base-package="com.test.dao" />
+
+	<!-- 这里 表示默认启用那些配置-->
+	<enable scanner="default" parser="freemarker" cache="memory" />
+	
+	<cache name="memory" class="net.javaoop.sx.cache.impl.MemorySqlCache" />
+	
+	<!-- 跟据base-package属性 进行扫描SqlXml文件 可以使用逗号进行分割 为空时扫描整个classes目录-->
+	<!-- 方案 按照 文件名进行分类 例如 TestDaoSql.mysql.xml 属于 mysql方案 -->
+	<scanner name="default" class="net.javaoop.sx.scanner.impl.ScannerImpl" />
+
+	<!-- 最外层配置的是扫描整个xml文件的实现类 -->
+	<parser name="freemarker" class="net.javaoop.sx.parser.impl.freemarker.ParserImpl">
+		<!-- 内层配置的是单个节点的实现类 -->
+		<node name="if" class="net.javaoop.sx.parser.impl.freemarker.IfNodeParser" />
+		<node name="else" class="net.javaoop.sx.parser.impl.freemarker.ElseNodeParser" />
+		<node name="elseif" class="net.javaoop.sx.parser.impl.freemarker.ElseIfNodeParser" />
+	</parser>
+
+	<!-- parser name="velocity" class="net.javaoop.sx.parser.impl.ParserImpl">
+		<node name="sql" class="net.javaoop.sx.parser.impl.velocity.IfNodeParser" />
+		<node name="if" class="net.javaoop.sx.parser.impl.velocity.IfNodeParser" />
+		<node name="else" class="net.javaoop.sx.parser.impl.velocity.ElseNodeParser" />
+		<node name="elseif" class="net.javaoop.sx.parser.impl.velocity.ElseIfNodeParser" />
+	</parser-->
+</configs>
