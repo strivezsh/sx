@@ -1,29 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configs>
-	<cache class="net.javaoop.sx.cache.impl.MemorySqlCache" />
+	<scan scheme="mysql" base-package="com.test.dao" />
 
-	<!-- scheme属性 表示启用哪套方法 -->
-	<enabled scheme="mysql" parser="freemarker" />
-
-	<!-- 跟据base-package属性 进行扫描SqlXml文件 可以使用逗号进行分割 -->
-	<!-- 此处 配置的 时候 千万不要配置 有大于其他包的类包 例如:com,com.test 这样 将会 扫描两边com.test -->
+	<!-- 这里 表示默认启用那些配置-->
+	<enable scanner="default" parser="freemarker" cache="memory" />
+	
+	<cache name="memory" class="net.javaoop.sx.cache.impl.MemorySqlCache" />
+	
+	<!-- 跟据base-package属性 进行扫描SqlXml文件 可以使用逗号进行分割 为空时扫描整个classes目录-->
 	<!-- 方案 按照 文件名进行分类 例如 TestDaoSql.mysql.xml 属于 mysql方案 -->
-	<scanner base-package="com.test.dao,com.test" class="net.javaoop.sx.scanner.impl.ScannerImpl" />
+	<scanner name="default" class="net.javaoop.sx.scanner.impl.ScannerImpl" />
 
 	<!-- 最外层配置的是扫描整个xml文件的实现类 -->
-	<parser name="freemarker" class="net.javaoop.sx.parser.impl.ParserImpl" resolve="true">
+	<parser name="freemarker" class="net.javaoop.sx.parser.impl.freemarker.ParserImpl">
 		<!-- 内层配置的是单个节点的实现类 -->
-		<node name="if" class="net.javaoop.sx.parser.impl.IfNodeParser" />
-		<node name="else" class="net.javaoop.sx.parser.impl.ElseNodeParser" />
-		<node name="elseif" class="net.javaoop.sx.parser.impl.ElseIfNodeParser" />
+		<node name="if" class="net.javaoop.sx.parser.impl.freemarker.IfNodeParser" />
+		<node name="else" class="net.javaoop.sx.parser.impl.freemarker.ElseNodeParser" />
+		<node name="elseif" class="net.javaoop.sx.parser.impl.freemarker.ElseIfNodeParser" />
 	</parser>
 
-	<!-- 最外层配置的是扫描整个xml文件的实现类 -->
-	<parser name="velocity" class="net.javaoop.sx.parser.impl.ParserImpl" resolve="true">
-		<!-- 内层配置的是单个节点的实现类 -->
-		<node name="sql" class="net.javaoop.sx.parser.impl.IfNodeParser" />
-		<node name="if" class="net.javaoop.sx.parser.impl.IfNodeParser" />
-		<node name="else" class="net.javaoop.sx.parser.impl.ElseNodeParser" />
-		<node name="elseif" class="net.javaoop.sx.parser.impl.ElseIfNodeParser" />
-	</parser>
+	<!-- parser name="velocity" class="net.javaoop.sx.parser.impl.ParserImpl">
+		<node name="sql" class="net.javaoop.sx.parser.impl.velocity.IfNodeParser" />
+		<node name="if" class="net.javaoop.sx.parser.impl.velocity.IfNodeParser" />
+		<node name="else" class="net.javaoop.sx.parser.impl.velocity.ElseNodeParser" />
+		<node name="elseif" class="net.javaoop.sx.parser.impl.velocity.ElseIfNodeParser" />
+	</parser-->
 </configs>

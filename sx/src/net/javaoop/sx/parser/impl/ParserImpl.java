@@ -1,4 +1,4 @@
-package net.javaoop.sx.parser.impl.freemarker;
+package net.javaoop.sx.parser.impl;
 
 import java.io.File;
 import java.util.List;

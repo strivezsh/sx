@@ -9,33 +9,13 @@ import net.javaoop.sx.parser.Parser;
 import net.javaoop.sx.scanner.Scanner;
 
 public class SxConfig {
-
-	public static final String DEFAULT_SCHEME = "default";
-	public static final String DEFAUTL_PARSER = "freemarker";
-
 	/**
 	 * 所有SQL语句的缓存
 	 */
 	private SqlCache sqlCache;
-
-	/**
-	 * 设置启用查询方案
-	 */
-	private String scheme;
-
-	/**
-	 * 设置启用解析方案
-	 */
-	private String parser;
-
-	/**
-	 * 
-	 */
 	private Map<String, Parser> parsers;
-
 	private List<String> basePackages;
 	private Scanner scanner;
-
 	/**
 	 * <pre>
 	 * 存放所有SqlXml文件
@@ -51,22 +31,6 @@ public class SxConfig {
 
 	public void setSqlCache(SqlCache sqlCache) {
 		this.sqlCache = sqlCache;
-	}
-
-	public String getScheme() {
-		return scheme;
-	}
-
-	public void setScheme(String scheme) {
-		this.scheme = scheme;
-	}
-
-	public String getParser() {
-		return parser;
-	}
-
-	public void setParser(String parser) {
-		this.parser = parser;
 	}
 
 	public Map<String, Parser> getParsers() {
@@ -100,5 +64,4 @@ public class SxConfig {
 	public void setSqlXmlFiles(Map<String, Map<String, File>> sqlXmlFiles) {
 		this.sqlXmlFiles = sqlXmlFiles;
 	}
-
 }

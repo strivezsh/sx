@@ -25,6 +25,7 @@ public class Test {
 	}
 
 	public static void t() {
+		log.error("错误");
 		SxBuilder builder = new SxBuilder();
 		Sx sx = builder.build("SX.xml");
 		SxConfig config = sx.getSxConfig();

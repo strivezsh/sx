@@ -76,7 +76,8 @@ public class ScannerImpl implements Scanner {
 						parseXmlFile(scheme, className, file, parsers);
 						map.put(className, file);
 					} catch (RuntimeException e) {
-//						log.debug("文件名:" + fileName + ",不符合规范(文件必须含有后缀,且文件名后三位字母为Sql,例如:TestDaoSql.xml)!!!");
+						// log.debug("文件名:" + fileName +
+						// ",不符合规范(文件必须含有后缀,且文件名后三位字母为Sql,例如:TestDaoSql.xml)!!!");
 						e.printStackTrace();
 					}
 				}
